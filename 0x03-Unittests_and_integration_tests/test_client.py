@@ -55,7 +55,7 @@ class TestGithubOrgClient(unittest.TestCase):
             )
 
     @patch('client.get_json')
-    def test_public_repos(self, mock_json: MagicMock) -> None:
+    def test_public_repos(self, mocked_json: MagicMock) -> None:
         """ To unit-test GithubOrgClient.public_repos. """
         payload = {
             'repos_url': "https://github.com/ChinenyeNmoh/alx-backend-python",
