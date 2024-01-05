@@ -3,7 +3,7 @@
 """
 import unittest
 from typing import Dict
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, patch, PropertyMock
 from parameterized import parameterized
 
 from client import GithubOrgClient
@@ -11,6 +11,7 @@ from client import GithubOrgClient
 
 class TestGithubOrgClient(unittest.TestCase):
     """TestGithubOrgClient class that inherits from unittest.TestCase."""
+
     @parameterized.expand([
         ('google', {"org": 'google'}),
         ('abc', {"org": 'abc'})
@@ -20,7 +21,7 @@ class TestGithubOrgClient(unittest.TestCase):
         self, input: str,
         result: Dict,
         mocked_get: MagicMock
-            ) -> None:
+    ) -> None:
         """_summary_
 
         Args:
@@ -36,6 +37,21 @@ class TestGithubOrgClient(unittest.TestCase):
         mocked_get.assert_called_once_with(
             "https://api.github.com/orgs/{}".format(input)
         )
+
+    def test_public_repos_url(self):
+        payload = {
+            "repos_url": "https://github.com/ChinenyeNmoh/alx-backend-python"
+        }
+        with patch(
+            'client.GithubOrgClient.org',
+            return_value=payload,
+            new_callable=PropertyMock
+        ) as mocked_get:
+            new_obj = GithubOrgClient('google')
+            self.assertEqual(
+                new_obj._public_repos_url,
+                "https://github.com/ChinenyeNmoh/alx-backend-python"
+            )
 
 
 if __name__ == '__main__':
