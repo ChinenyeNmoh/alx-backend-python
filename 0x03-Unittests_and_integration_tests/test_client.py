@@ -5,7 +5,7 @@ import unittest
 from typing import Dict
 from unittest.mock import MagicMock, Mock, patch, PropertyMock
 from parameterized import parameterized
-
+from utils import access_nested_map, get_json, memoize
 from client import GithubOrgClient
 
 
@@ -51,7 +51,33 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(
                 new_obj._public_repos_url,
                 "https://github.com/ChinenyeNmoh/alx-backend-python"
+
             )
+
+    @patch('client.get_json')
+    def test_public_repos(self, mocked_json):
+        payload = {
+            'repos_url': "https://github.com/ChinenyeNmoh/alx-backend-python",
+            'repos': [
+                {"name": "Chinenye"},
+                {"name": "Nmoh"}
+            ]
+        }
+
+        mocked_json.return_value = payload['repos']
+
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            return_value=payload['repos_url'],
+            new_callable=PropertyMock
+        ) as mocked_get:
+            new_obj2 = GithubOrgClient('google')
+            self.assertEqual(
+                new_obj2.public_repos(),
+                [i['name'] for i in payload['repos']]
+                )
+            mocked_json.assert_called_once()
+            mocked_get.assert_called_once()
 
 
 if __name__ == '__main__':
