@@ -39,6 +39,7 @@ class TestGithubOrgClient(unittest.TestCase):
         )
 
     def test_public_repos_url(self):
+        """ To unit-test GithubOrgClient.public_repos. """
         payload = {
             "repos_url": "https://github.com/ChinenyeNmoh/alx-backend-python"
         }
