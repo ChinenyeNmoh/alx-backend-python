@@ -92,8 +92,7 @@ class TestGithubOrgClient(unittest.TestCase):
         result: bool
             ) -> None:
         """ To unit-test GithubOrgClient.has_license. """
-        new_client2 = GithubOrgClient('google')
-        self.assertEqual(new_client2.has_license(input1, input2), result)
+        self.assertEqual(GithubOrgClient.has_license(input1, input2), result)
 
 
 if __name__ == '__main__':
